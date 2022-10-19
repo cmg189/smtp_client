@@ -37,4 +37,14 @@ You will need to make an account with smtp2go prior to using this program.
 
 ### Function Headers
 
+`void check_exe(int num_args)`
+- Description:
+    Checks number of arguments passed upon execution to ensure program is ran correctly. If user does not execute with 2 arguments (email and password) program will terminate
+
+- Parameters:
+    `int num_args` an int representing number of arguments passed when program is executed
+
+- Return:
+    None
+
 ### Structures 
