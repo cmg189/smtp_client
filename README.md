@@ -39,9 +39,11 @@ You will need to make an account with smtp2go prior to using this program.
 
 `void check_exe(int num_args)`
 - Description:
+
     Checks number of arguments passed upon execution to ensure program is ran correctly. If user does not execute with 2 arguments (email and password) program will terminate
 
 - Parameters:
+
     `int num_args` an int representing number of arguments passed when program is executed
 
 - Return:
@@ -52,12 +54,15 @@ You will need to make an account with smtp2go prior to using this program.
 
 `struct Email_info get_email_details()`
 - Description:
+
     Gets all information required to send email
 
 - Parameters:
+
     None
 
 - Return:
+
     `struct Email_info` contains senders name and email address, recipients name and email address, email subject, and email body
 
 
@@ -67,6 +72,7 @@ You will need to make an account with smtp2go prior to using this program.
 `struct Email_info`
 
 - Description:
+
     Holds information needed to send email
 
 - Variables:
