@@ -70,6 +70,7 @@ You will need to make an account with smtp2go prior to using this program.
     Holds information needed to send email
 
 - Variables:
+
     `char senders_name[EMAIL_SIZE]` Name of whos sending the email
 
     `char recipients_name[EMAIL_SIZE]` Name of whos recieving the email
@@ -79,7 +80,7 @@ You will need to make an account with smtp2go prior to using this program.
     `char destination[EMAIL_SIZE]` Email address of recipients
 
     `char subject[SUBJECT_SIZE]` Emails subject
-    
+
     `char body[BODY_SIZE]]` Emails body
 
 ### Other
