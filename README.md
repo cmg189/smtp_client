@@ -31,7 +31,7 @@ You will need to make an account with smtp2go prior to using this program.
 
     To compile run the command `g++ *.cpp -o email_client`
 
-    To execute run the command `./email_client your@email.com your_passward`
+    To execute run the command `./email_client your@email.com your_password`
 
     **NOTE:** `your@email.com` and `your_password`  are the email address and password associated with your smtp2go account.
 
@@ -50,6 +50,16 @@ You will need to make an account with smtp2go prior to using this program.
 
 ---
 
+`struct Email_info get_email_details()`
+- Description:
+    Gets all information required to send email
+
+- Parameters:
+    None
+
+- Return:
+    `struct Email_info` contains senders name and email address, recipients name and email address, email subject, and email body
+
 
 
 ### Structures
@@ -61,10 +71,15 @@ You will need to make an account with smtp2go prior to using this program.
 
 - Variables:
     `char senders_name[EMAIL_SIZE]` Name of whos sending the email
+
     `char recipients_name[EMAIL_SIZE]` Name of whos recieving the email
+
     `char source[EMAIL_SIZE]` Email address of sender
+
     `char destination[EMAIL_SIZE]` Email address of recipients
+
     `char subject[SUBJECT_SIZE]` Emails subject
+    
     `char body[BODY_SIZE]]` Emails body
 
 ### Other
