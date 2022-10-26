@@ -21,3 +21,6 @@ void check_exe(int num_args);
 
 // get email details from user 
 struct Email_info get_email_details();
+
+// connect to smtp2go server
+int connect_to_server(smtp_server, smtp_port);
