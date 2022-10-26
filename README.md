@@ -80,6 +80,7 @@ You will need to make an account with smtp2go prior to using this program.
 
     `int server_socket_fd` represents the file descriptor of the TCP socket made when connecting
 
+---
 
 
 ### Structures
