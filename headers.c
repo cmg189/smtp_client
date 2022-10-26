@@ -128,6 +128,45 @@ char *base64_encode(char *data){
 }
 
 void authenticate_account(int sock_fd, char* encoded_username, char* encoded_password){
+    char newline[] = "\n";
 
+    // send AUTH LOGIN command to server
+    char server_command[] = "AUTH LOGIN\n";
+    write(sock_fd, server_command, strlen(server_command));
+
+    // wait, read and output response from server
+    char response_buffer[_5BYTES];
+    sleep(1);
+    read(sock_fd, response_buffer, _5BYTES);
+    strcpy(response_buffer, strtok(response_buffer, "\n"));
+
+    printf("\nResponse for AUTH: %s\n", response_buffer);
+
+    // clear string to reuse
+    bzero(response_buffer, sizeof(response_buffer));
+
+    // send encoded username to server
+    strncat(encoded_username, newline, strlen(newline));
+
+    write(sock_fd, encoded_username, strlen(encoded_username));
+    sleep(1);
+    read(sock_fd, response_buffer, _5BYTES);
+    strcpy(response_buffer, strtok(response_buffer, "\n"));
+    printf("\nResponse for username: %s\n", response_buffer);
+
+    // clear string to reuse
+    bzero(response_buffer, sizeof(response_buffer));
+
+    // send encoded password to server
+    strncat(encoded_password, newline, strlen(newline));
+
+    write(sock_fd, encoded_password, strlen(encoded_password));
+    sleep(1);
+    read(sock_fd, response_buffer, _5BYTES);
+    strcpy(response_buffer, strtok(response_buffer, "\n"));
+    printf("\nResponse for password: %s\n", response_buffer);
+
+    // clear string to reuse
+    bzero(response_buffer, sizeof(response_buffer));
     return;
 }
