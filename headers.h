@@ -33,3 +33,5 @@ struct Email_info get_email_details();
 
 // connect to smtp2go server
 int connect_to_server(char smtp_server[], int smtp_port);
+
+void authenticate_account(int sock_fd);
