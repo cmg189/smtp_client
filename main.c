@@ -14,6 +14,8 @@ int main(int argc, char *argv[]){
     
     int server_socket_fd = connect_to_server(smtp_server, smtp_port);
 
+    authenicate_account(server_sock_fd);
+
     printf("\nProgram ended\n\n");
     return 0;
 }
