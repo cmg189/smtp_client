@@ -65,6 +65,21 @@ You will need to make an account with smtp2go prior to using this program.
 
     `struct Email_info` contains senders name and email address, recipients name and email address, email subject, and email body
 
+`int connect_to_server(char smtp_server[], int smtp_port)`
+- Description:
+
+    makes connection to the smtp2go server
+
+- Parameters:
+
+    `char smtp_server[]` represents the hostname of smtp2go
+
+    `int smtp_port` represents the port number to connect to smtp2go
+
+- Return:
+
+    `int server_socket_fd` represents the file descriptor of the TCP socket made when connecting
+
 
 
 ### Structures
