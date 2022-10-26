@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -34,4 +35,8 @@ struct Email_info get_email_details();
 // connect to smtp2go server
 int connect_to_server(char smtp_server[], int smtp_port);
 
-void authenticate_account(int sock_fd);
+// encodes data to base64
+char *base64_encode(char* data);
+
+// checks to see if smtp2go account is valid
+void authenticate_account(int sock_fd, char* encoded_username, char* encoded_password);
