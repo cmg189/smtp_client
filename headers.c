@@ -40,12 +40,16 @@ struct Email_info get_email_details(){
 }
 
 int connect_to_server(char smtp_server[], int smtp_port){
+
+    printf("\n\nAttempting to connect to the smtp2go server.....\n\n");
+
     // get IP address of smtp server
 	struct hostent *server_info;
 	server_info = gethostbyname(smtp_server);
 	if(server_info == NULL){
 		printf("\nServer address not found\n\n");
-		exit(0);
+        printf("Program ended\n\n");
+		exit(EXIT_FAILURE);
 	}
 
 	// convert IP address into string
@@ -65,10 +69,10 @@ int connect_to_server(char smtp_server[], int smtp_port){
 	// connect to server
 	connect(sock_fd, (struct sockaddr *)&server_socket, sizeof(server_socket));
 
-	// read and output response from server
+	// read response from server
 	char response_buffer[_5BYTES];
 	read(sock_fd, response_buffer, _5BYTES);
-	printf("\nResponse: %s", response_buffer);
+	//printf("\nResponse: %s", response_buffer);
 
 	// clear string to reuse
 	bzero(response_buffer, sizeof(response_buffer));
@@ -77,10 +81,21 @@ int connect_to_server(char smtp_server[], int smtp_port){
 	char server_command[] = "EHLO\n";
 	write(sock_fd, server_command, strlen(server_command));
 
-	// wait, read and output response from server
+	// wait and read response from server
 	sleep(1);
 	read(sock_fd, response_buffer, _5BYTES);
-	printf("\nResponse: %s", response_buffer);
+	//printf("\nResponse: %s", response_buffer);
+
+    // checking server response status for 250
+    char check_status[5];
+    char success[] = "250"; 
+    strcpy(check_status, strtok(response_buffer, "-"));
+    if( strcmp(check_status, success) == 0){
+        printf("\nConnection to the smtp2go server: successful\n\n");
+    }else{
+        printf("\nConnection to the smtp2go server: failed\n\nProgram ended\n\n");
+        exit(EXIT_FAILURE);
+    }
 
 	// clear string to reuse
 	bzero(response_buffer, sizeof(response_buffer));
