@@ -94,6 +94,7 @@ int connect_to_server(char smtp_server[], int smtp_port){
         printf("\nConnection to the smtp2go server: successful\n\n");
     }else{
         printf("\nConnection to the smtp2go server: failed\n\nProgram ended\n\n");
+        close(sock_fd);
         exit(EXIT_FAILURE);
     }
 
@@ -154,14 +155,15 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
     sleep(1);
     read(sock_fd, response_buffer, _5BYTES);
     strcpy(response_buffer, strtok(response_buffer, "\n"));
-
-    printf("\nResponse for AUTH: %s\n", response_buffer);
+    //printf("\nResponse for AUTH: %s\n", response_buffer);
 
     // clear string to reuse
     bzero(response_buffer, sizeof(response_buffer));
 
     // send encoded username to server
     strncat(encoded_username, newline, strlen(newline));
+
+    printf("\nAuthenticating email and password.....\n\n");
 
     write(sock_fd, encoded_username, strlen(encoded_username));
     sleep(1);
@@ -180,6 +182,18 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
     read(sock_fd, response_buffer, _5BYTES);
     strcpy(response_buffer, strtok(response_buffer, "\n"));
     printf("\nResponse for password: %s\n", response_buffer);
+
+    // checking server response for email and password authentication 
+    char check_status[5];
+    char auth_success[] = "235"; 
+    strcpy(check_status, strtok(response_buffer, " "));
+    if( strcmp(check_status, auth_success) == 0){
+        printf("\nAuthentication successful\n\n");
+    }else{
+        printf("\nAuthentication failed\n\nEnsure email and password are entered correctly\n\nProgram ended\n\n");
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
 
     // clear string to reuse
     bzero(response_buffer, sizeof(response_buffer));
