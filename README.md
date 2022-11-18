@@ -61,7 +61,10 @@ struct Account_info get_account_info(char smtp_server[], int smtp_port)
 
 - Parameters:
 
-    `char smtp_server[]` represents hostname of smtp2go
+    ``` c
+    char smtp_server[] 
+    ``` 
+    represents hostname of smtp2go
 
     `int smtp_port` represents port number used to connect to smtp2go
 
