@@ -26,9 +26,6 @@ struct Email_info{
     char body[BODY_SIZE];
 };
 
-// check if program is executed with email and password
-void check_exe(int num_args);
-
 // get email details from user 
 struct Email_info get_email_details();
 
