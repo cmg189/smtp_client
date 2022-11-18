@@ -1,6 +1,6 @@
 #include "headers.h"
 
-
+// get account info from user
 struct Account_info get_account_info(char smtp_server[], int smtp_port){
     struct Account_info info;
 
@@ -13,33 +13,7 @@ struct Account_info get_account_info(char smtp_server[], int smtp_port){
     return info;
 }
 
-// get email details from user
-struct Email_info get_email_details(){
-    struct Email_info email; 
-
-    printf("\nProvide the details for the email you are sending\n\n");
-
-    printf("Sender's name: ");
-    scanf("%[^\n]%*c", email.senders_name);
-
-    printf("Sender's email address: ");
-    scanf("%[^\n]%*c", email.source);
-
-    printf("\nRecipient's name: ");
-    scanf("%[^\n]%*c", email.recipients_name);
-
-    printf("Recipient's email address: ");
-    scanf("%[^\n]%*c", email.destination);
-
-    printf("\nEmail subject: ");
-    scanf("%[^\n]%*c", email.subject);
-
-    printf("Email body:\n");
-    scanf("%[^\n]%*c", email.body);
-
-    return email;
-}
-
+// establish connection to server
 int connect_to_server(char smtp_server[], int smtp_port){
 
     printf("\n\nAttempting to connect to the smtp2go server.....\n\n");
@@ -105,6 +79,7 @@ int connect_to_server(char smtp_server[], int smtp_port){
 	return sock_fd;
 }
 
+// encode username and password 
 char *base64_encode(char *data){
     static char encoding_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
                                 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
@@ -144,6 +119,7 @@ char *base64_encode(char *data){
     return encoded_data;
 }
 
+// send username and password to server
 void authenticate_account(int sock_fd, char* encoded_username, char* encoded_password){
     char newline[] = "\n";
 
@@ -199,4 +175,31 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
     // clear string to reuse
     bzero(response_buffer, sizeof(response_buffer));
     return;
+}
+
+// get email details from user
+struct Email_info get_email_details(){
+    struct Email_info email; 
+
+    printf("\nProvide the details for the email you are sending\n\n");
+
+    printf("Sender's name: ");
+    scanf("%[^\n]%*c", email.senders_name);
+
+    printf("Sender's email address: ");
+    scanf("%[^\n]%*c", email.source);
+
+    printf("\nRecipient's name: ");
+    scanf("%[^\n]%*c", email.recipients_name);
+
+    printf("Recipient's email address: ");
+    scanf("%[^\n]%*c", email.destination);
+
+    printf("\nEmail subject: ");
+    scanf("%[^\n]%*c", email.subject);
+
+    printf("Email body:\n");
+    scanf("%[^\n]%*c", email.body);
+
+    return email;
 }

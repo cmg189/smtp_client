@@ -2,21 +2,27 @@
 
 
 int main(int argc, char *argv[]){
+    printf("\n\nSMTP Client\n\n");
 
-    char smtp_server[] = "mail.smtp2go.com";    // hostname of smtp2go
-    int smtp_port = 2525;   // port# used by smtp2go
+    // hostname and port number of smtp2go
+    char smtp_server[] = "mail.smtp2go.com";
+    int smtp_port = 2525;
 
-    printf("\nSMTP Client\n\n");
+    // prompt user for username and password
     struct Account_info account = get_account_info(smtp_server, smtp_port);
 
-    char* encoded_username = base64_encode(account.username);        // encode username to base64
-    char* encoded_password = base64_encode(account.password);        // encode password to base64
+    // encode username and password in base64
+    char* encoded_username = base64_encode(account.username);
+    char* encoded_password = base64_encode(account.password);
 
-    int server_socket_fd = connect_to_server(smtp_server, smtp_port);   // create tcp socket to smtp2go
+    // create tcp socket with smtp2go
+    int server_socket_fd = connect_to_server(smtp_server, smtp_port);
 
-    authenticate_account(server_socket_fd, encoded_username, encoded_password);    // verify account is valid with smtp2go
+    // verify account info is valid
+    authenticate_account(server_socket_fd, encoded_username, encoded_password);
 
-    struct Email_info email = get_email_details();      // get email info from user
+    // get email info from user
+    struct Email_info email = get_email_details();
 
     printf("\nProgram ended\n\n");
     return 0;
