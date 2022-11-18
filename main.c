@@ -6,7 +6,8 @@ int main(int argc, char *argv[]){
     char smtp_server[] = "mail.smtp2go.com";    // hostname of smtp2go
     int smtp_port = 2525;   // port# used by smtp2go
 
-    
+    printf("\nSMTP Client\n\n");
+    struct Account_info account = get_account_info(smtp_server, smtp_port);
 
     char* encoded_username = base64_encode(argv[1]);        // encode username to base64
     char* encoded_password = base64_encode(argv[2]);        // encode password to base64
