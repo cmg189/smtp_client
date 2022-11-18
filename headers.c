@@ -1,7 +1,17 @@
 #include "headers.h"
 
 
+struct Account_info get_account_info(char smtp_server[], int smtp_port){
+    struct Account_info info;
 
+    printf("smtp2go's server can be found at: %s on port: %d\n\n", smtp_server, smtp_port);
+    printf("Enter your smtp2go username: ");
+    scanf("%[^\n]%*c", info.username);
+    printf("Enter the password associated with your username: ");
+    scanf("%[^\n]%*c", info.password);
+
+    return info;
+}
 
 // get email details from user
 struct Email_info get_email_details(){
