@@ -51,7 +51,9 @@ The username and password, used to create the user, will be the credentials you 
 
 ## Function Headers <a name="function_headers"></a>
 
-`struct Account_info get_account_info(char smtp_server[], int smtp_port)`
+``` c 
+struct Account_info get_account_info(char smtp_server[], int smtp_port)
+```
 
 - Description:
 
