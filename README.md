@@ -1,8 +1,18 @@
 ## SMTP Client
 
-This program implements an email client in connection with [smtp2go](https://www.smtp2go.com/)
+An SMTP email client that utilizes [smtp2go](https://www.smtp2go.com/)
 
-### Description
+
+## Table of contents
+
+1. [Description](#description)
+2. [Program Output](#program_output)
+3. [Compile and Execute](#compile_and_execute)
+4. [Function Headers](#function_headers)
+5. [Structures](#structures)
+6. [Other](#other)
+
+### Description <a name="description"></a>
 
 Simple Mail Transport Protocol (SMTP) is an email protocol used to send email messages.
 This C based email client uses a TCP socket to connect to smtp2go.
@@ -15,11 +25,16 @@ Users can enter:
 
 One email can be sent with each execution of this program.
 
+**NOTE:**
 You will need to make an account with smtp2go prior to using this program.
 
-### Program Output
+Once an account is made, add a SMTP User via the settings tab.
 
-### Compile and Execute
+The username and password, used to create the user, will be the credentials you will use with the program.
+
+### Program Output <a name="program_output"></a>
+
+### Compile and Execute <a name="compile_and_execute"></a>
 
 - Windows: 
 
@@ -34,7 +49,7 @@ You will need to make an account with smtp2go prior to using this program.
     To execute run the command `./email_client`
 
 
-### Function Headers
+### Function Headers <a name="function_headers"></a>
 
 `struct Account_info get_account_info(char smtp_server[], int smtp_port)`
 
@@ -103,7 +118,7 @@ You will need to make an account with smtp2go prior to using this program.
     None
 
 
-### Structures
+### Structures <a name="structures"></a>
 
 `struct Account_info`
 
@@ -139,7 +154,7 @@ You will need to make an account with smtp2go prior to using this program.
 
     `char body[BODY_SIZE]]` Emails body
 
-### Other
+### Other <a name="other"></a>
 
 `EXE_ARGS 3` number of arguments passed to program 
 
