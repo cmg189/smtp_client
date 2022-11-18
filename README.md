@@ -25,49 +25,37 @@ You will need to make an account with smtp2go prior to using this program.
 
     To compile run the command `g++ *.cpp -o email_client`
 
-    To execute run the command `email_client.exe your@email.com your_password`
+    To execute run the command `email_client.exe`
 
 - Linux / Mac
 
     To compile run the command `g++ *.cpp -o email_client`
 
-    To execute run the command `./email_client your@email.com your_password`
+    To execute run the command `./email_client`
 
-    **NOTE:** `your@email.com` and `your_password`  are the email address and password associated with your smtp2go account.
 
 ### Function Headers
 
-`void check_exe(int num_args)`
+`struct Account_info get_account_info(char smtp_server[], int smtp_port)`
+
 - Description:
 
-    Checks number of arguments passed upon execution to ensure program is ran correctly. If user does not execute with 2 arguments (email and password) program will terminate
+    Get the smtp2go username and password from user
 
 - Parameters:
 
-    `int num_args` an int representing number of arguments passed when program is executed
+    `char smtp_server[]` represents hostname of smtp2go
+
+    `int smtp_port` represents port number used to connect to smtp2go
 
 - Return:
 
-    None
-
----
-
-`struct Email_info get_email_details()`
-- Description:
-
-    Gets all information required to send email
-
-- Parameters:
-
-    None
-
-- Return:
-
-    `struct Email_info` contains senders name and email address, recipients name and email address, email subject, and email body
+    `struct Account_info` struct containing username and password of smtp2go account
 
 ---
 
 `int connect_to_server(char smtp_server[], int smtp_port)`
+
 - Description:
 
     makes connection to the smtp2go server
@@ -84,8 +72,52 @@ You will need to make an account with smtp2go prior to using this program.
 
 ---
 
+`struct Email_info get_email_details()`
+
+- Description:
+
+    Gets all information required to send email
+
+- Parameters:
+
+    None
+
+- Return:
+
+    `struct Email_info` contains senders name and email address, recipients name and email address, email subject, and email body
+
+---
+
+`void close_connection(int sock_fd)`
+
+- Description:
+
+    Closes tcp socket to smtp2go
+
+- Parameters:
+
+    `int sock_fd` represents tcp socket file descriptor to smtp2go
+
+- Return:
+
+    None
+
 
 ### Structures
+
+`struct Account_info`
+
+- Description:
+
+    Holds username and password for smtp2go account
+
+- Variables:
+
+    `char username[_1BYTE]` Username for smtp2go account
+
+    `char password[_1KB]` Password associated with username for smtp2go account
+
+---
 
 `struct Email_info`
 
