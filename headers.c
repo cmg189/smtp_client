@@ -203,3 +203,21 @@ struct Email_info get_email_details(){
 
     return email;
 }
+
+// close tcp socket with smtp2go
+void close_connection(int sock_fd){
+
+	// send quit command to server
+	char quit_command[] = "quit\n";
+	write(sock_fd, quit_command, strlen(quit_command));
+
+	// wait and read response from smtp2go
+	char response_buffer[_1BYTE];
+	sleep(1);
+	read(sock_fd, response_buffer, _1BYTE);
+	//printf("\nQuit response: %s", response_buffer);
+
+	// close connection to smtp2go
+	close(sock_fd);
+	return;
+}

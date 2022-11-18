@@ -24,6 +24,9 @@ int main(int argc, char *argv[]){
     // get email info from user
     struct Email_info email = get_email_details();
 
+    // close tcp socket with smtp2go
+    close_connection(int server_socket_fd);
+
     printf("\nProgram ended\n\n");
     return 0;
 }

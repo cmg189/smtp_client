@@ -35,14 +35,17 @@ struct Email_info{
 // get account info user
 struct Account_info get_account_info(char smtp_server[], int smtp_port);
 
-// connect to smtp2go server
+// create tcp socket with smtp2go
 int connect_to_server(char smtp_server[], int smtp_port);
 
-// encodes data to base64
+// encode data to base64
 char *base64_encode(char* data);
 
-// checks to see if smtp2go account is valid
+// check to see if smtp2go account is valid
 void authenticate_account(int sock_fd, char* encoded_username, char* encoded_password);
 
 // get email details from user 
 struct Email_info get_email_details();
+
+// close tcp socket with smtp2go
+void close_connection(int sock_fd);
