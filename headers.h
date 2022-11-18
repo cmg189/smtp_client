@@ -32,6 +32,8 @@ struct Email_info{
     char body[BODY_SIZE];
 };
 
+struct Account_info get_account_info(char smtp_server[], int smtp_port);
+
 // get email details from user 
 struct Email_info get_email_details();
 
