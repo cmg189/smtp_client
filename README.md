@@ -61,10 +61,7 @@ struct Account_info get_account_info(char smtp_server[], int smtp_port)
 
 - Parameters:
 
-    ``` c
-    char smtp_server[] 
-    ``` 
-    represents hostname of smtp2go
+    `char smtp_server[]` represents hostname of smtp2go
 
     `int smtp_port` represents port number used to connect to smtp2go
 
@@ -74,7 +71,9 @@ struct Account_info get_account_info(char smtp_server[], int smtp_port)
 
 ---
 
-`int connect_to_server(char smtp_server[], int smtp_port)`
+``` c
+int connect_to_server(char smtp_server[], int smtp_port)
+```
 
 - Description:
 
@@ -92,7 +91,9 @@ struct Account_info get_account_info(char smtp_server[], int smtp_port)
 
 ---
 
-`struct Email_info get_email_details()`
+``` c
+struct Email_info get_email_details()
+```
 
 - Description:
 
@@ -108,7 +109,9 @@ struct Account_info get_account_info(char smtp_server[], int smtp_port)
 
 ---
 
-`void close_connection(int sock_fd)`
+``` c
+void close_connection(int sock_fd)
+```
 
 - Description:
 
@@ -125,7 +128,9 @@ struct Account_info get_account_info(char smtp_server[], int smtp_port)
 
 ## Structures <a name="structures"></a>
 
-`struct Account_info`
+``` c
+struct Account_info
+```
 
 - Description:
 
@@ -139,7 +144,9 @@ struct Account_info get_account_info(char smtp_server[], int smtp_port)
 
 ---
 
-`struct Email_info`
+``` c
+struct Email_info
+```
 
 - Description:
 
