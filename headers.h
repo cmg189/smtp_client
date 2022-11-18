@@ -16,6 +16,12 @@
 #define _1BYTE 1024
 #define _1KB 8192
 
+// holds smtp2go username and password
+struct Account_info{
+    char username[_1BYTE];
+    char password[_1KB];
+};
+
 // holds details of email from user
 struct Email_info{
     char senders_name[EMAIL_SIZE];
