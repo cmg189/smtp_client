@@ -219,5 +219,7 @@ void close_connection(int sock_fd){
 
 	// close connection to smtp2go
 	close(sock_fd);
+
+    printf("\nConnection with smtp2go has ended\n");
 	return;
 }
