@@ -163,13 +163,13 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
     // send encoded username to server
     strncat(encoded_username, newline, strlen(newline));
 
-    printf("\nAuthenticating email and password.....\n\n");
+    printf("\nAuthenticating username and password.....\n\n");
 
     write(sock_fd, encoded_username, strlen(encoded_username));
     sleep(1);
     read(sock_fd, response_buffer, _5BYTES);
     strcpy(response_buffer, strtok(response_buffer, "\n"));
-    printf("\nResponse for username: %s\n", response_buffer);
+    //printf("\nResponse for username: %s\n", response_buffer);
 
     // clear string to reuse
     bzero(response_buffer, sizeof(response_buffer));
@@ -181,7 +181,7 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
     sleep(1);
     read(sock_fd, response_buffer, _5BYTES);
     strcpy(response_buffer, strtok(response_buffer, "\n"));
-    printf("\nResponse for password: %s\n", response_buffer);
+    //printf("\nResponse for password: %s\n", response_buffer);
 
     // checking server response for email and password authentication 
     char check_status[5];
@@ -190,7 +190,7 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
     if( strcmp(check_status, auth_success) == 0){
         printf("\nAuthentication successful\n\n");
     }else{
-        printf("\nAuthentication failed\n\nEnsure email and password are entered correctly\n\nProgram ended\n\n");
+        printf("\nAuthentication failed\n\nEnsure username and password are entered correctly\n\nProgram ended\n\n");
         close(sock_fd);
         exit(EXIT_FAILURE);
     }
