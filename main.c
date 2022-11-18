@@ -9,8 +9,8 @@ int main(int argc, char *argv[]){
     printf("\nSMTP Client\n\n");
     struct Account_info account = get_account_info(smtp_server, smtp_port);
 
-    char* encoded_username = base64_encode(argv[1]);        // encode username to base64
-    char* encoded_password = base64_encode(argv[2]);        // encode password to base64
+    char* encoded_username = base64_encode(account.username);        // encode username to base64
+    char* encoded_password = base64_encode(account.password);        // encode password to base64
 
     int server_socket_fd = connect_to_server(smtp_server, smtp_port);   // create tcp socket to smtp2go
 
