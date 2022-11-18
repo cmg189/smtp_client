@@ -3,7 +3,7 @@
 An SMTP email client that utilizes [smtp2go](https://www.smtp2go.com/)
 
 
-## Table of contents
+## Table of Contents
 
 1. [Description](#description)
 2. [Program Output](#program_output)
