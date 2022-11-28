@@ -3,12 +3,12 @@
 // get account info from user
 struct Account_info get_account_info(char smtp_server[], int smtp_port){
     struct Account_info info;
-		
-		printf("\n\nSMTP Client\n\n");
+
+		printf("\n\n\t\t\t\tSMTP Client\n\n\n");
     printf("smtp2go's server can be found at: %s on port: %d\n\n", smtp_server, smtp_port);
-    printf("Enter your smtp2go username: ");
+    printf("\nEnter your smtp2go username: ");
     scanf("%[^\n]%*c", info.username);
-    printf("Enter the password associated with your username: ");
+    printf("\n\nEnter the password associated with your username: ");
     scanf("%[^\n]%*c", info.password);
 
     return info;
@@ -17,29 +17,28 @@ struct Account_info get_account_info(char smtp_server[], int smtp_port){
 // establish connection to server
 int connect_to_server(char smtp_server[], int smtp_port){
 
-    printf("\n\nAttempting to connect to the smtp2go server.....\n\n");
+  printf("\n\nAttempting to connect to the smtp2go server.....\n\n");
 
-    // get IP address of smtp server
+  // get IP address of smtp server
 	struct hostent *server_info;
 	server_info = gethostbyname(smtp_server);
 	if(server_info == NULL){
 		printf("\nServer address not found\n\n");
-        printf("Program ended\n\n");
+    printf("Program ended\n\n");
 		exit(EXIT_FAILURE);
 	}
 
-	// convert IP address into string
+	// convert IP address into string and create TCP socket
 	char *server_ip = inet_ntoa( *((struct in_addr*)server_info->h_addr_list[0]) );
-    // create TCP socket
 	int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
 
-	// initalize server socket
+	// initalize TCP socket
 	struct sockaddr_in server_socket;
 	bzero(&server_socket, sizeof(server_socket));
 	server_socket.sin_family = AF_INET;
 	server_socket.sin_port = htons((unsigned short)smtp_port);
 
-	// convert server socket to binary
+	// convert TCP socket to binary
 	inet_pton(AF_INET, server_ip, &(server_socket.sin_addr));
 
 	// connect to server
@@ -48,9 +47,6 @@ int connect_to_server(char smtp_server[], int smtp_port){
 	// read response from server
 	char response_buffer[_5BYTES];
 	read(sock_fd, response_buffer, _5BYTES);
-	//printf("\nResponse: %s", response_buffer);
-
-	// clear string to reuse
 	bzero(response_buffer, sizeof(response_buffer));
 
 	// send EHLO command to server
@@ -60,21 +56,18 @@ int connect_to_server(char smtp_server[], int smtp_port){
 	// wait and read response from server
 	sleep(1);
 	read(sock_fd, response_buffer, _5BYTES);
-	//printf("\nResponse: %s", response_buffer);
 
-    // checking server response status for 250
-    char check_status[5];
-    char success[] = "250";
-    strcpy(check_status, strtok(response_buffer, "-"));
-    if( strcmp(check_status, success) == 0){
-        printf("\nConnection to the smtp2go server: successful\n\n");
-    }else{
-        printf("\nConnection to the smtp2go server: failed\n\nProgram ended\n\n");
-        close(sock_fd);
-        exit(EXIT_FAILURE);
-    }
-
-	// clear string to reuse
+  // checking server response status for 250
+  char check_status[5];
+  char success[] = "250";
+  strcpy(check_status, strtok(response_buffer, "-"));
+  if( strcmp(check_status, success) == 0){
+    printf("\nConnection to the smtp2go server: successful\n\n");
+  }else{
+    printf("\nConnection to the smtp2go server: failed\n\nProgram ended\n\n");
+    close(sock_fd);
+    exit(EXIT_FAILURE);
+  }
 	bzero(response_buffer, sizeof(response_buffer));
 
 	return sock_fd;
@@ -132,14 +125,10 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
     char server_command[] = "AUTH LOGIN\n";
     write(sock_fd, server_command, strlen(server_command));
 
-    // wait, read and output response from server
+    // wait and read response from server
     char response_buffer[_5BYTES];
     sleep(1);
     read(sock_fd, response_buffer, _5BYTES);
-    strcpy(response_buffer, strtok(response_buffer, "\n"));
-    //printf("\nResponse for AUTH: %s\n", response_buffer);
-
-    // clear string to reuse
     bzero(response_buffer, sizeof(response_buffer));
 
     // send encoded username to server
@@ -150,10 +139,6 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
     write(sock_fd, encoded_username, strlen(encoded_username));
     sleep(1);
     read(sock_fd, response_buffer, _5BYTES);
-    strcpy(response_buffer, strtok(response_buffer, "\n"));
-    //printf("\nResponse for username: %s\n", response_buffer);
-
-    // clear string to reuse
     bzero(response_buffer, sizeof(response_buffer));
 
     // send encoded password to server
@@ -163,7 +148,6 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
     sleep(1);
     read(sock_fd, response_buffer, _5BYTES);
     strcpy(response_buffer, strtok(response_buffer, "\n"));
-    //printf("\nResponse for password: %s\n", response_buffer);
 
     // checking server response for email and password authentication
     char check_status[5];
@@ -176,9 +160,8 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
         close(sock_fd);
         exit(EXIT_FAILURE);
     }
-
-    // clear string to reuse
     bzero(response_buffer, sizeof(response_buffer));
+
     return;
 }
 
@@ -186,24 +169,24 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
 struct Email_info get_email_details(){
     struct Email_info email;
 
-    printf("\nProvide the details for the email you are sending\n\n");
+    printf("\n\tProvide the details for the email you are sending\n\n\n");
 
     printf("Sender's name: ");
     scanf("%[^\n]%*c", email.senders_name);
 
-    printf("Sender's email address: ");
+    printf("\nSender's email address: ");
     scanf("%[^\n]%*c", email.source_email);
 
     printf("\nRecipient's name: ");
     scanf("%[^\n]%*c", email.recipients_name);
 
-    printf("Recipient's email address: ");
+    printf("\nRecipient's email address: ");
     scanf("%[^\n]%*c", email.destination_email);
 
     printf("\nEmail subject: ");
     scanf("%[^\n]%*c", email.subject);
 
-    printf("Email body:\n");
+    printf("\nEmail body:\n");
     scanf("%[^\n]%*c", email.body);
 
     return email;
@@ -235,39 +218,115 @@ struct Email_commands format_commands(struct Email_info info){
 	strcat(commands.to_name, info.destination_email);
 	strcat(commands.to_name, ">\n");
 
-	strcat(commands.subject_line, "SUBJECT: ");
-	strcat(commands.subject_line, info.subject);
-	strcat(commands.subject_line, "\n");
+	strcat(commands.subject, "SUBJECT: ");
+	strcat(commands.subject, info.subject);
+	strcat(commands.subject, "\n");
 
-	strcat(commands.body_message, info.body);
-	strcat(commands.body_message, "\n.\n");
-
+	strcat(commands.body, info.body);
+	strcat(commands.body, "\n.\n");
 
   return commands;
 }
 
 // send commands to server
-void send_commands(struct Email_commands commands){
+void send_commands(int sock_fd, struct Email_commands commands){
+	printf("\n\nSending email through SMTP2GO.....\n");
+	char server_response[_1BYTE];
+	char compare_buffer[_1BYTE];
+	char email_id[_1BYTE];
+
+	write(sock_fd, commands.from_email, strlen(commands.from_email));
+	sleep(1);
+	read(sock_fd, server_response, _1BYTE);
+
+	strcpy(compare_buffer, strtok(server_response, " "));
+	if(strcmp(compare_buffer, "250") != 0){
+		printf("\nError when sending \"MAIL FROM:\" command\n\n");
+		printf("Server's response: %s\n\n", server_response);
+		printf("Try entering a valid source email address\n\nCanceling email transmission.....");
+		return;
+	}
+	bzero(server_response, _1BYTE);
+	bzero(compare_buffer, _1BYTE);
+
+	write(sock_fd, commands.to_email, strlen(commands.to_email));
+	sleep(1);
+	read(sock_fd, server_response, _1BYTE);
+
+	strcpy(compare_buffer, strtok(server_response, " "));
+	if(strcmp(compare_buffer, "250") != 0){
+		printf("\nError when sending \"RCPT TO:\" command\n\n");
+		printf("Server's response: %s\n\n", server_response);
+		printf("Try entering a valid destination email address\n\nCanceling email transmission.....");
+		return;
+	}
+	bzero(server_response, _1BYTE);
+	bzero(compare_buffer, _1BYTE);
+
+	write(sock_fd, commands.data, strlen(commands.data));
+	sleep(1);
+	read(sock_fd, server_response, _1BYTE);
+
+	strcpy(compare_buffer, strtok(server_response, " "));
+	if(strcmp(compare_buffer, "354") != 0){
+		printf("\nError when sending \"DATA\" command\n\n");
+		printf("Server's response: %s\n\n", server_response);
+		printf("Try entering the email details again\n\nCanceling email transmission.....");
+		return;
+	}
+	bzero(server_response, _1BYTE);
+	bzero(compare_buffer, _1BYTE);
+
+	write(sock_fd, commands.from_name, strlen(commands.from_name));
+	sleep(1);
+
+	write(sock_fd, commands.to_name, strlen(commands.to_name));
+	sleep(1);
+
+	write(sock_fd, commands.subject, strlen(commands.subject));
+	sleep(1);
+
+	write(sock_fd, commands.body, strlen(commands.body));
+	sleep(1);
+	read(sock_fd, server_response, _1BYTE);
+
+	strcpy(compare_buffer, strtok(server_response, " "));
+	if(strcmp(compare_buffer, "250") != 0){
+		printf("\nError when sending email's body\n\n");
+		printf("Server's response: %s\n\n", server_response);
+		printf("Try entering the email details again\n\nCanceling email transmission.....");
+		return;
+	}
+	// get the transmission ID from server's response
+	strcpy(compare_buffer, strtok(NULL, "="));
+	strcpy(email_id, strtok(NULL, "\n"));
+
+	printf("\n\nEmail has been successfully sent\n");
+	printf("\n\nYour email's transmission ID is: %s\n\n", email_id);
+	bzero(server_response, _1BYTE);
+	bzero(compare_buffer, _1BYTE);
+	bzero(email_id, _1BYTE);
 
   return;
 }
 
 // close tcp socket with smtp2go
 void close_connection(int sock_fd){
+	printf("\nClosing connection with smtp2go.....\n");
 
 	// send quit command to server
 	char quit_command[] = "quit\n";
 	write(sock_fd, quit_command, strlen(quit_command));
 
-	// wait and read response from smtp2go
+	// wait and read response
 	char response_buffer[_1BYTE];
 	sleep(1);
 	read(sock_fd, response_buffer, _1BYTE);
-	//printf("\nQuit response: %s", response_buffer);
 
 	// close connection to smtp2go
 	close(sock_fd);
 
-  printf("\nConnection with smtp2go has ended\n");
+	printf("\n\nConnection closed\n\n");
+
 	return;
 }
