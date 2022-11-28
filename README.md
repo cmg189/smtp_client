@@ -37,6 +37,9 @@ The username and password, used to create the user, will be the credentials you 
 <img src="images/screenshot_one.PNG" width="450" height="400">
 <img src="images/screenshot_two.PNG" width="450" height="400">
 
+**NOTE:**
+
+All information above is used for demonstration purposes only (i.e. not real credentials)
 
 ## Compile and Execute <a name="compile_and_execute"></a>
 
