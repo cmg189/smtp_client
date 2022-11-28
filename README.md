@@ -34,6 +34,10 @@ The username and password, used to create the user, will be the credentials you 
 
 ## Program Output <a name="program_output"></a>
 
+![start](images/screenshot_one.PNG)<br>
+![start](images/screenshot_two.PNG)<br>
+
+
 ## Compile and Execute <a name="compile_and_execute"></a>
 
 - Windows:
