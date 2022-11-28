@@ -25,20 +25,20 @@ struct Account_info{
 struct Email_info{
     char senders_name[EMAIL_SIZE];
     char recipients_name[EMAIL_SIZE];
-    char source[EMAIL_SIZE];
-    char destination[EMAIL_SIZE];
+    char source_email[EMAIL_SIZE];
+    char destination_email[EMAIL_SIZE];
     char subject[SUBJECT_SIZE];
     char body[BODY_SIZE];
 };
 
 // holds email commands to send to server
 struct Email_commands{
-    char from_email[EMAIL_SIZE];
-    char to_email[EMAIL_SIZE];
-    char data[EMAIL_SIZE];
-    char from_name[EMAIL_SIZE];
-    char to_name[EMAIL_SIZE];
-    char subject_line[SUBJECT_SIZE];
+    char from_email[_1BYTE];
+    char to_email[_1BYTE];
+    char data[_1BYTE];
+    char from_name[_1BYTE];
+    char to_name[_1BYTE];
+    char subject_line[_1BYTE];
     char body_message[BODY_SIZE];
 };
 
