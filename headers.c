@@ -4,7 +4,7 @@
 struct Account_info get_account_info(char smtp_server[], int smtp_port){
     struct Account_info info;
 
-		printf("\n\n\t\t\t\tSMTP Client\n\n\n");
+    printf("\n\n\t\t\t\tSMTP Client\n\n\n");
     printf("smtp2go's server can be found at: %s on port: %d\n\n", smtp_server, smtp_port);
     printf("\nEnter your smtp2go username: ");
     scanf("%[^\n]%*c", info.username);
