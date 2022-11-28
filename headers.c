@@ -3,7 +3,8 @@
 // get account info from user
 struct Account_info get_account_info(char smtp_server[], int smtp_port){
     struct Account_info info;
-
+		
+		printf("\n\nSMTP Client\n\n");
     printf("smtp2go's server can be found at: %s on port: %d\n\n", smtp_server, smtp_port);
     printf("Enter your smtp2go username: ");
     scanf("%[^\n]%*c", info.username);
@@ -191,13 +192,13 @@ struct Email_info get_email_details(){
     scanf("%[^\n]%*c", email.senders_name);
 
     printf("Sender's email address: ");
-    scanf("%[^\n]%*c", email.source);
+    scanf("%[^\n]%*c", email.source_email);
 
     printf("\nRecipient's name: ");
     scanf("%[^\n]%*c", email.recipients_name);
 
     printf("Recipient's email address: ");
-    scanf("%[^\n]%*c", email.destination);
+    scanf("%[^\n]%*c", email.destination_email);
 
     printf("\nEmail subject: ");
     scanf("%[^\n]%*c", email.subject);
@@ -211,6 +212,36 @@ struct Email_info get_email_details(){
 // format email details into commands
 struct Email_commands format_commands(struct Email_info info){
   struct Email_commands commands;
+
+	strcat(commands.from_email, "MAIL FROM: <");
+	strcat(commands.from_email, info.source_email);
+	strcat(commands.from_email, ">\n");
+
+	strcat(commands.to_email, "RCPT TO: <");
+	strcat(commands.to_email, info.destination_email);
+	strcat(commands.to_email, ">\n");
+
+	strcat(commands.data, "DATA\n");
+
+	strcat(commands.from_name, "FROM: ");
+	strcat(commands.from_name, info.senders_name);
+	strcat(commands.from_name, " <");
+	strcat(commands.from_name, info.source_email);
+	strcat(commands.from_name, ">\n");
+
+	strcat(commands.to_name, "TO: ");
+	strcat(commands.to_name, info.recipients_name);
+	strcat(commands.to_name, " <");
+	strcat(commands.to_name, info.destination_email);
+	strcat(commands.to_name, ">\n");
+
+	strcat(commands.subject_line, "SUBJECT: ");
+	strcat(commands.subject_line, info.subject);
+	strcat(commands.subject_line, "\n");
+
+	strcat(commands.body_message, info.body);
+	strcat(commands.body_message, "\n.\n");
+
 
   return commands;
 }

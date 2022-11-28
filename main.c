@@ -2,8 +2,6 @@
 
 
 int main(int argc, char *argv[]){
-    printf("\n\nSMTP Client\n\n");
-
     // hostname and port number of smtp2go
     char smtp_server[] = "mail.smtp2go.com";
     int smtp_port = 2525;
