@@ -1,6 +1,6 @@
 ## SMTP Client
 
-An SMTP email client that utilizes [smtp2go](https://www.smtp2go.com/)
+An SMTP client that utilizes [smtp2go](https://www.smtp2go.com/) as a email relay server
 
 
 ## Table of Contents
@@ -34,8 +34,9 @@ The username and password, used to create the user, will be the credentials you 
 
 ## Program Output <a name="program_output"></a>
 
-![start](images/screenshot_one.PNG)<br>
-![start](images/screenshot_two.PNG)<br>
+<img src="images/screenshot_one.PNG" width="450" height="400">
+<img src="images/screenshot_two.PNG" width="450" height="400">
+
 
 
 ## Compile and Execute <a name="compile_and_execute"></a>
