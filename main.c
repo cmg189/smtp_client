@@ -26,10 +26,10 @@ int main(int argc, char *argv[]){
     struct Email_commands commands = format_commands(email);
 
     // send commands to server
-    send_commands(commands);
+    send_commands(server_socket_fd, commands);
 
     // close tcp socket with smtp2go
-    close_connection(int server_socket_fd);
+    close_connection(server_socket_fd);
 
     printf("\nProgram ended\n\n");
     return 0;
