@@ -38,7 +38,6 @@ The username and password, used to create the user, will be the credentials you 
 <img src="images/screenshot_two.PNG" width="450" height="400">
 
 
-
 ## Compile and Execute <a name="compile_and_execute"></a>
 
 - Windows:
@@ -92,9 +91,52 @@ int connect_to_server(char smtp_server[], int smtp_port)
 
 - Return:
 
-    `int server_socket_fd` Represents the file descriptor of the TCP socket made when connecting
+    `int` Represents the file descriptor of the TCP socket made when connecting
 
 ---
+
+```c
+char *base64_encode(char* data)
+```
+
+- Description:
+
+	Base 64 encoding the sting passed to it
+	Special thanks to this user for providing the details of this function: [source](https://stackoverflow.com/questions/342409/how-do-i-base64-encode-decode-in-c)
+
+- Parameters:
+
+	`char* data` Represents the string to be encoded
+
+- Return:
+
+	`char*` Represents base64 encoded string
+
+---
+
+```c
+void authenticate_account(int sock_fd, char* encoded_username, char* encoded_password)
+```
+
+- Description:
+
+	Authenticates username and password with the smtp2go server
+
+- Parameters:
+
+	`int sock_fd` TCP socket file descriptor used to connect to server
+
+	`char* encoded_username` Base64 encoded username
+
+	`char* encoded_password` Base64 encoded password
+
+
+- Return:
+
+	None
+
+---
+
 
 ``` c
 struct Email_info get_email_details()
@@ -114,17 +156,56 @@ struct Email_info get_email_details()
 
 ---
 
+```c
+struct Email_commands format_commands(struct Email_info info)
+```
+
+- Description:
+
+	Formats commands to send to the smtp2go server for email transmission
+
+- Parameters:
+
+	`struct Email_info info` Struct containing details of the email given by user
+
+- Return:
+
+	`struct Email_commands` Struct containing commands to be sent to the smtp2go server
+
+---
+
+```c
+void send_commands(int sock_fd, struct Email_commands commands)
+```
+
+- Description:
+
+	Writes commands to the smtp2go server and checks for successful acknowledgements from the server
+
+- Parameters:
+
+	`int sock_fd` TCP socket file descriptor used to connect to server
+
+	`struct Email_commands commands` Struct containing commands to send to server
+
+- Return:
+
+	None
+
+---
+
+
 ``` c
 void close_connection(int sock_fd)
 ```
 
 - Description:
 
-    Closes tcp socket to smtp2go
+    Closes TCP socket to smtp2go
 
 - Parameters:
 
-    `int sock_fd` Represents tcp socket file descriptor to smtp2go
+    `int sock_fd` TCP socket file descriptor used to connect to server
 
 - Return:
 
