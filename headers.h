@@ -38,8 +38,8 @@ struct Email_commands{
     char data[_1BYTE];
     char from_name[_1BYTE];
     char to_name[_1BYTE];
-    char subject_line[_1BYTE];
-    char body_message[BODY_SIZE];
+    char subject[_1BYTE];
+    char body[BODY_SIZE];
 };
 
 // get account info user
@@ -61,7 +61,7 @@ struct Email_info get_email_details();
 struct Email_commands format_commands(struct Email_info info);
 
 // send commands to server
-void send_commands(struct Email_commands commands);
+void send_commands(int sock_fd, struct Email_commands commands);
 
 // close tcp socket with smtp2go
 void close_connection(int sock_fd);
