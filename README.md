@@ -36,7 +36,7 @@ The username and password, used to create the user, will be the credentials you 
 
 ## Compile and Execute <a name="compile_and_execute"></a>
 
-- Windows: 
+- Windows:
 
     To compile run the command `g++ *.cpp -o email_client`
 
@@ -51,7 +51,7 @@ The username and password, used to create the user, will be the credentials you 
 
 ## Function Headers <a name="function_headers"></a>
 
-``` c 
+``` c
 struct Account_info get_account_info(char smtp_server[], int smtp_port)
 ```
 
@@ -61,13 +61,13 @@ struct Account_info get_account_info(char smtp_server[], int smtp_port)
 
 - Parameters:
 
-    `char smtp_server[]` represents hostname of smtp2go
+    `char smtp_server[]` Represents hostname of smtp2go
 
-    `int smtp_port` represents port number used to connect to smtp2go
+    `int smtp_port` Represents port number used to connect to smtp2go
 
 - Return:
 
-    `struct Account_info` struct containing username and password of smtp2go account
+    `struct Account_info` Struct containing username and password of smtp2go account
 
 ---
 
@@ -77,17 +77,17 @@ int connect_to_server(char smtp_server[], int smtp_port)
 
 - Description:
 
-    makes connection to the smtp2go server
+    Makes connection to the smtp2go server
 
 - Parameters:
 
-    `char smtp_server[]` represents the hostname of smtp2go
+    `char smtp_server[]` Represents the hostname of smtp2go
 
-    `int smtp_port` represents the port number to connect to smtp2go
+    `int smtp_port` Represents the port number to connect to smtp2go
 
 - Return:
 
-    `int server_socket_fd` represents the file descriptor of the TCP socket made when connecting
+    `int server_socket_fd` Represents the file descriptor of the TCP socket made when connecting
 
 ---
 
@@ -105,7 +105,7 @@ struct Email_info get_email_details()
 
 - Return:
 
-    `struct Email_info` contains senders name and email address, recipients name and email address, email subject, and email body
+    `struct Email_info` Contains senders name and email address, recipients name and email address, email subject, and email body
 
 ---
 
@@ -119,7 +119,7 @@ void close_connection(int sock_fd)
 
 - Parameters:
 
-    `int sock_fd` represents tcp socket file descriptor to smtp2go
+    `int sock_fd` Represents tcp socket file descriptor to smtp2go
 
 - Return:
 
@@ -166,12 +166,36 @@ struct Email_info
 
     `char body[BODY_SIZE]]` Emails body
 
+---
+
+``` c
+struct Email_commands
+```
+
+- Description:
+
+	Holds commands to be sent to smtp2go for sending email
+
+- Variables:
+
+	`char from_email[_1BYTE]` Tells server the source email address
+
+	`char to_email[_1BYTE]` Tells server the destination email address
+
+	`char data[_1BYTE]` Tells server that email data is being sent next
+
+	`char from_name[_1BYTE]` Tells server the name of the person whos sending the email
+
+	`char to_name[_1BYTE]` Tells server the name of the person whos receiving the email
+
+	`char subject[_1BYTE]` Tells server the subject of the email
+
+	`char body[BODY_SIZE]` Tells server the body of the email
+
 ## Other <a name="other"></a>
 
-`EXE_ARGS 3` number of arguments passed to program 
+`EMAIL_SIZE 30` Max number of characters for senders name and email address, recipients name and email address
 
-`EMAIL_SIZE 30` max number of characters for senders name and email address, recipients name and email address
+`SUBJECT_SIZE 50` Max number of characters for the subject of email
 
-`SUBJECT_SIZE 50` max number of characters for the subject of email
-
-`BODY_SIZE 10000` max number of characters for the body of email
+`BODY_SIZE 10000` Max number of characters for the body of email
