@@ -63,7 +63,7 @@ int connect_to_server(char smtp_server[], int smtp_port){
 
     // checking server response status for 250
     char check_status[5];
-    char success[] = "250"; 
+    char success[] = "250";
     strcpy(check_status, strtok(response_buffer, "-"));
     if( strcmp(check_status, success) == 0){
         printf("\nConnection to the smtp2go server: successful\n\n");
@@ -79,8 +79,12 @@ int connect_to_server(char smtp_server[], int smtp_port){
 	return sock_fd;
 }
 
-// encode username and password 
+// encode username and password
 char *base64_encode(char *data){
+	//
+	// special thanks to the user who suggested this function for base64 encoding
+	//	https://stackoverflow.com/questions/342409/how-do-i-base64-encode-decode-in-c
+	//
     static char encoding_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
                                 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
                                 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
@@ -160,9 +164,9 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
     strcpy(response_buffer, strtok(response_buffer, "\n"));
     //printf("\nResponse for password: %s\n", response_buffer);
 
-    // checking server response for email and password authentication 
+    // checking server response for email and password authentication
     char check_status[5];
-    char auth_success[] = "235"; 
+    char auth_success[] = "235";
     strcpy(check_status, strtok(response_buffer, " "));
     if( strcmp(check_status, auth_success) == 0){
         printf("\nAuthentication successful\n\n");
@@ -179,7 +183,7 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
 
 // get email details from user
 struct Email_info get_email_details(){
-    struct Email_info email; 
+    struct Email_info email;
 
     printf("\nProvide the details for the email you are sending\n\n");
 
@@ -204,6 +208,19 @@ struct Email_info get_email_details(){
     return email;
 }
 
+// format email details into commands
+struct Email_commands format_commands(struct Email_info info){
+  struct Email_commands commands;
+
+  return commands;
+}
+
+// send commands to server
+void send_commands(struct Email_commands commands){
+
+  return;
+}
+
 // close tcp socket with smtp2go
 void close_connection(int sock_fd){
 
@@ -220,6 +237,6 @@ void close_connection(int sock_fd){
 	// close connection to smtp2go
 	close(sock_fd);
 
-    printf("\nConnection with smtp2go has ended\n");
+  printf("\nConnection with smtp2go has ended\n");
 	return;
 }

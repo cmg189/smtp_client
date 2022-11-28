@@ -24,6 +24,12 @@ int main(int argc, char *argv[]){
     // get email info from user
     struct Email_info email = get_email_details();
 
+    // format commands to send to server
+    struct Email_commands commands = format_commands(email);
+
+    // send commands to server
+    send_commands(commands);
+
     // close tcp socket with smtp2go
     close_connection(int server_socket_fd);
 

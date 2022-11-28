@@ -8,7 +8,6 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <stdbool.h>
-#define EXE_ARGS 3
 #define EMAIL_SIZE 30
 #define SUBJECT_SIZE 50
 #define BODY_SIZE 10000
@@ -32,6 +31,17 @@ struct Email_info{
     char body[BODY_SIZE];
 };
 
+// holds email commands to send to server
+struct Email_commands{
+    char from_email[EMAIL_SIZE];
+    char to_email[EMAIL_SIZE];
+    char data[EMAIL_SIZE];
+    char from_name[EMAIL_SIZE];
+    char to_name[EMAIL_SIZE];
+    char subject_line[SUBJECT_SIZE];
+    char body_message[BODY_SIZE];
+};
+
 // get account info user
 struct Account_info get_account_info(char smtp_server[], int smtp_port);
 
@@ -44,8 +54,14 @@ char *base64_encode(char* data);
 // check to see if smtp2go account is valid
 void authenticate_account(int sock_fd, char* encoded_username, char* encoded_password);
 
-// get email details from user 
+// get email details from user
 struct Email_info get_email_details();
+
+// format email details into commands
+struct Email_commands format_commands(struct Email_info info);
+
+// send commands to server
+void send_commands(struct Email_commands commands);
 
 // close tcp socket with smtp2go
 void close_connection(int sock_fd);
