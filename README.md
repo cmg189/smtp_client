@@ -45,13 +45,13 @@ All information above is used for demonstration purposes only (i.e. not real cre
 
 - Windows:
 
-    To compile run the command `g++ *.cpp -o email_client`
+    To compile run the command `gcc main.c headers.c -o email_client`
 
     To execute run the command `email_client.exe`
 
 - Linux / Mac
 
-    To compile run the command `g++ *.cpp -o email_client`
+    To compile run the command `gcc main.c headers.c -o email_client`
 
     To execute run the command `./email_client`
 
