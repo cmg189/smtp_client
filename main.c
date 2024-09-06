@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]){
     // hostname and port number of smtp2go
-    char smtp_server[] = "mail.smtp2go.com";
+    const char smtp_server[] = "mail.smtp2go.com";
     int smtp_port = 2525;
 
     // prompt user for username and password

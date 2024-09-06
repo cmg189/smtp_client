@@ -8,17 +8,16 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <stdbool.h>
-#define EMAIL_SIZE 30
-#define SUBJECT_SIZE 50
-#define BODY_SIZE 10000
-#define _5BYTES 5120
-#define _1BYTE 1024
-#define _1KB 8192
+
+#define ACCOUNT_SIZE  64
+#define EMAIL_SIZE    128
+#define SUBJECT_SIZE  128
+#define BODY_SIZE     4096
 
 // holds smtp2go username and password
 struct Account_info{
-    char username[_1BYTE];
-    char password[_1KB];
+    char username[ACCOUNT_SIZE];
+    char password[ACCOUNT_SIZE];
 };
 
 // holds details of email from user
@@ -33,12 +32,12 @@ struct Email_info{
 
 // holds email commands to send to server
 struct Email_commands{
-    char from_email[_1BYTE];
-    char to_email[_1BYTE];
-    char data[_1BYTE];
-    char from_name[_1BYTE];
-    char to_name[_1BYTE];
-    char subject[_1BYTE];
+    char from_email[EMAIL_SIZE];
+    char to_email[EMAIL_SIZE];
+    char data[EMAIL_SIZE];
+    char from_name[EMAIL_SIZE];
+    char to_name[EMAIL_SIZE];
+    char subject[SUBJECT_SIZE];
     char body[BODY_SIZE];
 };
 
