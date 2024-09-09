@@ -42,16 +42,16 @@ struct Email_commands{
 };
 
 // get account info user
-struct Account_info get_account_info(char smtp_server[], int smtp_port);
+struct Account_info get_account_info(const char *smtp_server, const int smtp_port);
 
 // create tcp socket with smtp2go
-int connect_to_server(char smtp_server[], int smtp_port);
+int connect_to_server(const char *smtp_server, const int smtp_port);
 
 // encode data to base64
-char *base64_encode(char* data);
+char *base64_encode(char *data);
 
 // check to see if smtp2go account is valid
-void authenticate_account(int sock_fd, char* encoded_username, char* encoded_password);
+void authenticate_account(int sock_fd, char *encoded_username, char *encoded_password);
 
 // get email details from user
 struct Email_info get_email_details();
