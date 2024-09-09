@@ -1,7 +1,8 @@
 #include "headers.h"
 
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
     // hostname and port number of smtp2go
     const char smtp_server[] = "mail.smtp2go.com";
     int smtp_port = 2525;
