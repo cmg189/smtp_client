@@ -19,14 +19,20 @@ struct Account_info get_account_info(char smtp_server[], int smtp_port)
 // establish connection to server
 int connect_to_server(char smtp_server[], int smtp_port)
 {
+    struct hostent *server_info = NULL;
+    struct sockaddr_in server_socket;
+    const char server_command[] = "EHLO\n";
+    const char success[] = "250";             // response status
+    char response_buffer[BODY_SIZE] = { 0 };
+    char *server_ip = NULL;
+    char check_status[8] = { 0 };
+    int sock_fd = 0;
 
     printf("\n\nAttempting to connect to the smtp2go server.....\n\n");
 
     // get IP address of smtp server
-    struct hostent *server_info = NULL;
-
     server_info = gethostbyname(smtp_server);
-    if(server_info == NULL)
+    if(!server_info)
     {
         printf("\nServer address not found\n\n");
         printf("Program ended\n\n");
@@ -34,11 +40,10 @@ int connect_to_server(char smtp_server[], int smtp_port)
     }
 
     // convert IP address into string and create TCP socket
-    char *server_ip = inet_ntoa( *((struct in_addr*)server_info->h_addr_list[0]) );
-    int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
+    server_ip = inet_ntoa( *((struct in_addr*)server_info->h_addr_list[0]) );
+    sock_fd = socket(AF_INET, SOCK_STREAM, 0);
 
     // initalize TCP socket
-    struct sockaddr_in server_socket;
     bzero(&server_socket, sizeof(server_socket));
     server_socket.sin_family = AF_INET;
     server_socket.sin_port = htons((unsigned short)smtp_port);
@@ -50,12 +55,10 @@ int connect_to_server(char smtp_server[], int smtp_port)
     connect(sock_fd, (struct sockaddr *)&server_socket, sizeof(server_socket));
 
     // read response from server
-    char response_buffer[BODY_SIZE];
     read(sock_fd, response_buffer, BODY_SIZE);
     bzero(response_buffer, sizeof(response_buffer));
 
     // send EHLO command to server
-    char server_command[] = "EHLO\n";
     write(sock_fd, server_command, strlen(server_command));
 
     // wait and read response from server
@@ -63,9 +66,6 @@ int connect_to_server(char smtp_server[], int smtp_port)
     read(sock_fd, response_buffer, BODY_SIZE);
 
     // checking server response status for 250
-    char check_status[5];
-    char success[] = "250";
-
     strcpy(check_status, strtok(response_buffer, "-"));
     if( strcmp(check_status, success) == 0 )
     {
@@ -107,7 +107,8 @@ char *base64_encode(char *data)
     char *encoded_data = malloc(output_length);
     if (encoded_data == NULL) return NULL;
 
-    for (int i = 0, j = 0; i < input_length;) {
+    for (int i = 0, j = 0; i < input_length;)
+    {
 
         uint32_t octet_a = i < input_length ? (unsigned char)data[i++] : 0;
         uint32_t octet_b = i < input_length ? (unsigned char)data[i++] : 0;
@@ -132,14 +133,16 @@ char *base64_encode(char *data)
 // send username and password to server
 void authenticate_account(int sock_fd, char* encoded_username, char* encoded_password)
 {
-    char newline[] = "\n";
+    const char server_command[] = "AUTH LOGIN\n";
+    const char auth_success[] = "235";
+    const char newline[] = "\n";
+    char response_buffer[BODY_SIZE] = { 0 };
+    char check_status[8] = { 0 };
 
     // send AUTH LOGIN command to server
-    char server_command[] = "AUTH LOGIN\n";
     write(sock_fd, server_command, strlen(server_command));
 
     // wait and read response from server
-    char response_buffer[BODY_SIZE];
     sleep(1);
     read(sock_fd, response_buffer, BODY_SIZE);
     bzero(response_buffer, sizeof(response_buffer));
@@ -163,10 +166,8 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
     strcpy(response_buffer, strtok(response_buffer, "\n"));
 
     // checking server response for email and password authentication
-    char check_status[5];
-    char auth_success[] = "235";
     strcpy(check_status, strtok(response_buffer, " "));
-    if( strcmp(check_status, auth_success) == 0 )
+    if( !strcmp(check_status, auth_success) )
     {
         printf("\nAuthentication successful\n\n");
     }
@@ -212,7 +213,7 @@ struct Email_info get_email_details()
 // format email details into commands
 struct Email_commands format_commands(struct Email_info info)
 {
-  struct Email_commands commands;
+    struct Email_commands commands;
 
     strcat(commands.from_email, "MAIL FROM: <");
     strcat(commands.from_email, info.source_email);
@@ -243,23 +244,24 @@ struct Email_commands format_commands(struct Email_info info)
     strcat(commands.body, info.body);
     strcat(commands.body, "\n.\n");
 
-  return commands;
+    return commands;
 }
 
 // send commands to server
 void send_commands(int sock_fd, struct Email_commands commands)
 {
+    char server_response[BODY_SIZE] = { 0 };
+    char compare_buffer[BODY_SIZE] = { 0 };
+    char email_id[BODY_SIZE] = { 0 };
+
     printf("\n\nSending email through SMTP2GO.....\n");
-    char server_response[BODY_SIZE];
-    char compare_buffer[BODY_SIZE];
-    char email_id[BODY_SIZE];
 
     write(sock_fd, commands.from_email, strlen(commands.from_email));
     sleep(1);
     read(sock_fd, server_response, BODY_SIZE);
 
     strcpy(compare_buffer, strtok(server_response, " "));
-    if(strcmp(compare_buffer, "250") != 0)
+    if( strcmp(compare_buffer, "250") )
     {
         printf("\nError when sending \"MAIL FROM:\" command\n\n");
         printf("Server's response: %s\n\n", server_response);
@@ -274,7 +276,7 @@ void send_commands(int sock_fd, struct Email_commands commands)
     read(sock_fd, server_response, BODY_SIZE);
 
     strcpy(compare_buffer, strtok(server_response, " "));
-    if(strcmp(compare_buffer, "250") != 0)
+    if( strcmp(compare_buffer, "250") )
     {
         printf("\nError when sending \"RCPT TO:\" command\n\n");
         printf("Server's response: %s\n\n", server_response);
@@ -289,7 +291,7 @@ void send_commands(int sock_fd, struct Email_commands commands)
     read(sock_fd, server_response, BODY_SIZE);
 
     strcpy(compare_buffer, strtok(server_response, " "));
-    if(strcmp(compare_buffer, "354") != 0)
+    if( strcmp(compare_buffer, "354") )
     {
         printf("\nError when sending \"DATA\" command\n\n");
         printf("Server's response: %s\n\n", server_response);
@@ -314,7 +316,7 @@ void send_commands(int sock_fd, struct Email_commands commands)
     read(sock_fd, server_response, BODY_SIZE);
 
     strcpy(compare_buffer, strtok(server_response, " "));
-    if(strcmp(compare_buffer, "250") != 0)
+    if( strcmp(compare_buffer, "250") )
     {
         printf("\nError when sending email's body\n\n");
         printf("Server's response: %s\n\n", server_response);
@@ -332,20 +334,21 @@ void send_commands(int sock_fd, struct Email_commands commands)
     bzero(compare_buffer, BODY_SIZE);
     bzero(email_id, BODY_SIZE);
 
-  return;
+    return;
 }
 
 // close tcp socket with smtp2go
 void close_connection(int sock_fd)
 {
+    const char quit_command[] = "quit\n";
+    char response_buffer[BODY_SIZE] = { 0 };
+
     printf("\nClosing connection with smtp2go.....\n");
 
     // send quit command to server
-    char quit_command[] = "quit\n";
     write(sock_fd, quit_command, strlen(quit_command));
 
     // wait and read response
-    char response_buffer[BODY_SIZE];
     sleep(1);
     read(sock_fd, response_buffer, BODY_SIZE);
 

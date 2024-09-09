@@ -3,28 +3,33 @@
 
 int main(int argc, char *argv[])
 {
-    // hostname and port number of smtp2go
-    const char smtp_server[] = "mail.smtp2go.com";
-    int smtp_port = 2525;
+    struct Account_info account;
+    struct Email_info email;
+    struct Email_commands commands;
+    const char smtp_server[] = "mail.smtp2go.com";  // hostname
+    const int smtp_port = 2525;                     // port number
+    char* encoded_username = NULL;
+    char* encoded_password = NULL;
+    int server_socket_fd = 0;
 
     // prompt user for username and password
-    struct Account_info account = get_account_info(smtp_server, smtp_port);
+    account = get_account_info(smtp_server, smtp_port);
 
     // encode username and password in base64
-    char* encoded_username = base64_encode(account.username);
-    char* encoded_password = base64_encode(account.password);
+    encoded_username = base64_encode(account.username);
+    encoded_password = base64_encode(account.password);
 
     // create tcp socket with smtp2go
-    int server_socket_fd = connect_to_server(smtp_server, smtp_port);
+    server_socket_fd = connect_to_server(smtp_server, smtp_port);
 
     // verify account info is valid
     authenticate_account(server_socket_fd, encoded_username, encoded_password);
 
     // get email info from user
-    struct Email_info email = get_email_details();
+    email = get_email_details();
 
     // format commands to send to server
-    struct Email_commands commands = format_commands(email);
+    commands = format_commands(email);
 
     // send commands to server
     send_commands(server_socket_fd, commands);
