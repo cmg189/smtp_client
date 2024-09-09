@@ -72,7 +72,12 @@ int connect_to_server(const char *smtp_server, const int smtp_port)
     }
 
     // read response from server
-    read(sock_fd, response_buffer, sizeof(response_buffer));
+    if( read(sock_fd, response_buffer, sizeof(response_buffer)) == -1 )
+    {
+        printf("\nread error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
     bzero(response_buffer, sizeof(response_buffer));
 
     // send EHLO command to server
