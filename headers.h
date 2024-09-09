@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <stdbool.h>
+#include <errno.h>
 
 #define ACCOUNT_SIZE  64
 #define EMAIL_SIZE    128

@@ -7,6 +7,7 @@ struct Account_info get_account_info(const char *smtp_server, const int smtp_por
 
     printf("\n\n\t\t\t\tSMTP Client\n\n\n");
     printf("smtp2go's server can be found at: %s on port: %d\n\n", smtp_server, smtp_port);
+
     printf("\nEnter your smtp2go username: ");
     fgets(info.username, sizeof(info.username), stdin);
 
@@ -34,8 +35,7 @@ int connect_to_server(const char *smtp_server, const int smtp_port)
     server_info = gethostbyname(smtp_server);
     if(!server_info)
     {
-        printf("\nServer address not found\n\n");
-        printf("Program ended\n\n");
+        printf("\nServer address not found\n\nProgram ended\n\n");
         exit(EXIT_FAILURE);
     }
 
@@ -43,27 +43,54 @@ int connect_to_server(const char *smtp_server, const int smtp_port)
     server_ip = inet_ntoa( *((struct in_addr*)server_info->h_addr_list[0]) );
     sock_fd = socket(AF_INET, SOCK_STREAM, 0);
 
+    if(sock_fd == -1)
+    {
+        printf("\nsocket error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
+
     // initalize TCP socket
     bzero(&server_socket, sizeof(server_socket));
     server_socket.sin_family = AF_INET;
     server_socket.sin_port = htons((unsigned short)smtp_port);
 
     // convert TCP socket to binary
-    inet_pton(AF_INET, server_ip, &(server_socket.sin_addr));
+    if( inet_pton(AF_INET, server_ip, &(server_socket.sin_addr)) == -1 )
+    {
+        printf("\ninet_pton error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
 
     // connect to server
-    connect(sock_fd, (struct sockaddr *)&server_socket, sizeof(server_socket));
+    if( connect(sock_fd, (struct sockaddr *)&server_socket, sizeof(server_socket)) == -1 )
+    {
+        printf("\nconnect error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
 
     // read response from server
     read(sock_fd, response_buffer, sizeof(response_buffer));
     bzero(response_buffer, sizeof(response_buffer));
 
     // send EHLO command to server
-    write(sock_fd, server_command, strlen(server_command));
+    if( write(sock_fd, server_command, strlen(server_command)) == -1 )
+    {
+        printf("\nwrite error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
 
     // wait and read response from server
     sleep(1);
-    read(sock_fd, response_buffer, sizeof(response_buffer));
+    if( read(sock_fd, response_buffer, sizeof(response_buffer)) == -1 )
+    {
+        printf("\nread error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
 
     // checking server response status for 250
     strncpy(check_status, strtok(response_buffer, "-"), sizeof(check_status));
@@ -137,11 +164,21 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
     char check_status[8] = { 0 };
 
     // send AUTH LOGIN command to server
-    write(sock_fd, server_command, strlen(server_command));
+    if( write(sock_fd, server_command, strlen(server_command)) == -1)
+    {
+        printf("\nwrite error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
 
     // wait and read response from server
     sleep(1);
-    read(sock_fd, response_buffer, sizeof(response_buffer));
+    if( read(sock_fd, response_buffer, sizeof(response_buffer)) == -1 )
+    {
+        printf("\nread error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
     bzero(response_buffer, sizeof(response_buffer));
 
     // send encoded username to server
@@ -149,17 +186,39 @@ void authenticate_account(int sock_fd, char* encoded_username, char* encoded_pas
 
     printf("\nAuthenticating username and password.....\n\n");
 
-    write(sock_fd, encoded_username, strlen(encoded_username));
+    if( write(sock_fd, encoded_username, strlen(encoded_username)) == -1 )
+    {
+        printf("\nwrite error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
     sleep(1);
-    read(sock_fd, response_buffer, sizeof(response_buffer));
+
+    if( read(sock_fd, response_buffer, sizeof(response_buffer)) == -1 )
+    {
+        printf("\nread error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
     bzero(response_buffer, sizeof(response_buffer));
 
     // send encoded password to server
     strncat(encoded_password, newline, strlen(newline));
 
-    write(sock_fd, encoded_password, strlen(encoded_password));
+    if( write(sock_fd, encoded_password, strlen(encoded_password)) == -1 )
+    {
+        printf("\nwrite error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
     sleep(1);
-    read(sock_fd, response_buffer, sizeof(response_buffer));
+
+    if( read(sock_fd, response_buffer, sizeof(response_buffer)) == -1)
+    {
+        printf("\nread error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
     strncpy(response_buffer, strtok(response_buffer, "\n"), sizeof(response_buffer));
 
     // checking server response for email and password authentication
@@ -250,9 +309,20 @@ void send_commands(int sock_fd, struct Email_commands commands)
 
     printf("\n\nSending email through SMTP2GO.....\n");
 
-    write(sock_fd, commands.from_email, strlen(commands.from_email));
+    if( write(sock_fd, commands.from_email, strlen(commands.from_email)) == -1 )
+    {
+        printf("\nwrite error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
     sleep(1);
-    read(sock_fd, server_response, BODY_SIZE);
+
+    if( read(sock_fd, server_response, BODY_SIZE) == -1 )
+    {
+        printf("\nread error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
 
     strncpy(compare_buffer, strtok(server_response, " "), (sizeof(compare_buffer) -1));
     if( strcmp(compare_buffer, "250") )
@@ -265,9 +335,20 @@ void send_commands(int sock_fd, struct Email_commands commands)
     bzero(server_response, BODY_SIZE);
     bzero(compare_buffer, BODY_SIZE);
 
-    write(sock_fd, commands.to_email, strlen(commands.to_email));
+    if( write(sock_fd, commands.to_email, strlen(commands.to_email)) == -1 )
+    {
+        printf("\nwrite error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
     sleep(1);
-    read(sock_fd, server_response, sizeof(server_response));
+
+    if( read(sock_fd, server_response, sizeof(server_response)) == -1 )
+    {
+        printf("\nread error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
 
     strncpy(compare_buffer, strtok(server_response, " "), (sizeof(compare_buffer) -1));
     if( strcmp(compare_buffer, "250") )
@@ -280,9 +361,20 @@ void send_commands(int sock_fd, struct Email_commands commands)
     bzero(server_response, sizeof(server_response));
     bzero(compare_buffer, sizeof(compare_buffer));
 
-    write(sock_fd, commands.data, strlen(commands.data));
+    if( write(sock_fd, commands.data, strlen(commands.data)) == -1 )
+    {
+        printf("\nwrite error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
     sleep(1);
-    read(sock_fd, server_response, sizeof(server_response));
+
+    if( read(sock_fd, server_response, sizeof(server_response)) == -1 )
+    {
+        printf("\nread error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
 
     strncpy(compare_buffer, strtok(server_response, " "), (sizeof(compare_buffer) -1));
     if( strcmp(compare_buffer, "354") )
@@ -295,19 +387,44 @@ void send_commands(int sock_fd, struct Email_commands commands)
     bzero(server_response, sizeof(server_response));
     bzero(compare_buffer, sizeof(compare_buffer));
 
-    write(sock_fd, commands.from_name, strlen(commands.from_name));
+    if( write(sock_fd, commands.from_name, strlen(commands.from_name)) == -1)
+    {
+        printf("\nwrite error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
     sleep(1);
 
-    write(sock_fd, commands.to_name, strlen(commands.to_name));
+    if( write(sock_fd, commands.to_name, strlen(commands.to_name)) == -1 )
+    {
+        printf("\nwrite error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
     sleep(1);
 
-    write(sock_fd, commands.subject, strlen(commands.subject));
+    if( write(sock_fd, commands.subject, strlen(commands.subject)) == -1)
+    {
+        printf("\nwrite error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
     sleep(1);
 
-    write(sock_fd, commands.body, strlen(commands.body));
+    if( write(sock_fd, commands.body, strlen(commands.body)) == -1 )
+    {
+        printf("\nwrite error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
     sleep(1);
 
-    read(sock_fd, server_response, sizeof(server_response));
+    if( read(sock_fd, server_response, sizeof(server_response)) == -1 )
+    {
+        printf("\nread error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
 
     strncpy(compare_buffer, strtok(server_response, " "), (sizeof(compare_buffer) -1));
     if( strcmp(compare_buffer, "250") )
@@ -340,11 +457,21 @@ void close_connection(int sock_fd)
     printf("\nClosing connection with smtp2go.....\n");
 
     // send quit command to server
-    write(sock_fd, quit_command, strlen(quit_command));
+    if( write(sock_fd, quit_command, strlen(quit_command)) == -1 )
+    {
+        printf("\nwrite error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
 
     // wait and read response
     sleep(1);
-    read(sock_fd, response_buffer, sizeof(response_buffer));
+    if( read(sock_fd, response_buffer, sizeof(response_buffer)) == -1 )
+    {
+        printf("\nread error: %s error_number:%d\n\nProgram ended\n\n", strerror(errno), errno);
+        close(sock_fd);
+        exit(EXIT_FAILURE);
+    }
 
     // close connection to smtp2go
     close(sock_fd);
